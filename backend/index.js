@@ -253,12 +253,99 @@ app.get('/api/user/:cpf', async (req, res) => {
 })
 
 app.get('/api/pedido/:id/:cpf', async (req, res) => {
+    const idPedido = req.params.id
+    const cpfTurista = req.params.cpf
+    const viagem = await sql`
+    SELECT
+        V.CPF_CRIADOR as "cpf",
+        V.IDVIAGEM as "id",
+        V.DATA_COMECO as "data_comeco",
+        V.DATA_FIM as "data_fim",
+        V.VALOR as "valor"
+    FROM
+        VIAGEM V
+    WHERE
+        V.IDVIAGEM = '1';
+    `
+    const turistas = await sql`
+    SELECT
+        T.CPF as "cpf",
+        T.NOME_TURISTA as "nome"
+    FROM
+        TURISTAS_VIAGEM V
+    JOIN
+        TURISTA T
+        ON
+            (T.CPF = V.CPF_ADICIONADO)
+    WHERE
+        V.IDVIAGEM = '1';
+    `
+    const quartos = await sql`
+    SELECT
+        Q.NUMERO_QUARTO as "n",
+        Q.PRECO as "preco",
+        Q.TIPO_QUARTO as "tipo",
+        Q.CAPACIDADE as "capacidade",
+        H.NOME as "nome",
+        CONCAT(H.RUA, ', ', H.BAIRRO, ', ', H.NUMERO, ' - ', H.CEP) as "endereco"
+    FROM
+        QUARTOS_VIAGEM V
+    JOIN
+        QUARTO Q
+        ON
+            (Q.NUMERO_QUARTO = V.NUMERO_QUARTO) AND (Q.CNPJ_HOTEL = V.CNPJ_HOTEL)
+    JOIN
+        ESTABELECIMENTO_COMERCIAL H
+        ON
+            (Q.CNPJ_HOTEL = H.CNPJ)
+    WHERE
+        V.IDVIAGEM = '1';
+    `
+    const pontos = await sql`
+    SELECT
+        P.NOME as "nome",
+        CONCAT(P.RUA, ', ', P.BAIRRO, ', ', P.NUMERO, ' - ', P.CEP) as "endereco"
+    FROM
+        PONTOS_VIAGEM V
+    JOIN
+        ESTABELECIMENTO_COMERCIAL P
+    ON
+        (V.CNPJ_ADICIONADO = P.CNPJ);
+    `
+    const passagens = await sql`
+    SELECT
+        P.IDPASSAGEM as "id",
+        P.NUMERO_ASSENTO as "n",
+        P.DATA_PASSAGEM as "data",
+        CONCAT(P.HORARIO_SAIDA, ' -> ', P.HORARIO_CHEGADA) as "horario",
+        P.PRECO as "preco",
+        P.TIPO_PASSAGEM as "tipo",
+        ARRAY_TO_STRING(ARRAY_AGG(PPC.NOME_CIDADE), ', ') as "passa_por"
+    FROM
+        PASSAGENS_VIAGEM V
+    JOIN
+        PASSAGEM P
+        ON
+            (P.IDPASSAGEM = V.IDPASSAGEM)
+    LEFT JOIN
+        PASSA_POR_CIDADE PPC
+        ON
+            (P.IDPASSAGEM = PPC.IDPASSAGEM)
+    WHERE
+        V.IDVIAGEM = '1'
+    GROUP BY
+            P.IDPASSAGEM;
+    `
+
     res.json({
-        "response": {
-            "cpf": "000.000.000-00",
-            "nome": "Nome do turista"
+        response: {
+            pedido: viagem[0],
+            turistas: turistas,
+            quartos: quartos,
+            pontos: pontos,
+            passagens: passagens
         },
-        "status": "OK"
+        status: "OK"
     })
 })
  

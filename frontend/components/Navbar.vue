@@ -37,7 +37,7 @@ export default {
         {
           title: "Viajar",
           icon: "map-marker",
-          to: { name: 'inspire' }
+          to: { path: '/pais/' }
         }
       ]
     }

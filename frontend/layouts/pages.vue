@@ -52,7 +52,12 @@ export default {
         {
           title: 'Países',
           icon: 'lightbulb',
-          to: { name: 'inspire' }
+          to: { path: '/pais/' }
+        },
+        {
+          title: 'Turistas',
+          icon: 'lightbulb',
+          to: { path: '/turista/' }
         }
       ]
     }

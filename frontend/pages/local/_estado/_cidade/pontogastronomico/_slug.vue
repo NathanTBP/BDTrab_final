@@ -20,7 +20,7 @@
         </p>
       </div>
       <div class="buttons is-centered">
-        <button class="button is-link">Adicionar ponto gastrônomico no pedido</button>
+        <NuxtLink :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/pontogastronomico/${encodeURIComponent(this.$route.params.slug)}/adicionar/` }" class="button is-link">Adicionar ponto gastrônomico no pedido</NuxtLink>
       </div>
     </div>
   </section>
@@ -37,7 +37,7 @@ export default {
     return "pages"
   },
   async created() {
-    const response = await this.$axios.get(`/api/cidade/${this.$route.params.estado}/${this.$route.params.cidade}/pontos/${this.$route.params.slug}`)
+    const response = await this.$axios.get(`/api/cidade/${this.$route.params.estado}/${this.$route.params.cidade}/pontos/${encodeURIComponent(this.$route.params.slug)}`)
 
     if (response.data.status === "OK") {
       this.response = response.data.response

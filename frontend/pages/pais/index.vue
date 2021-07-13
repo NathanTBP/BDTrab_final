@@ -2,13 +2,13 @@
   <section class="section">
     <div v-for="i in Math.ceil(response.length / 3)" :key="i" class="columns is-centered is-variable is-6 is-dektop has-text-centered">
       <div v-if="response[(i - 1) * 3]" class="column is-one-quarter">
-        <Card :title="response[(i - 1) * 3].nome" subtitle="Um local maravilhoso para você conhecer!" :description="response[(i - 1) * 3].descricao" image="https://bulma.io/images/placeholders/1280x960.png" :to="{ name: 'index'}" />
+        <Card :title="response[(i - 1) * 3].nome" subtitle="Um local maravilhoso para você conhecer!" :description="response[(i - 1) * 3].descricao" image="https://bulma.io/images/placeholders/1280x960.png" :to="{ path: '/pais/' + encodeURIComponent(response[(i - 1) * 3].nome) }" />
       </div>
       <div v-if="response[(i - 1) * 3 + 1]" class="column is-one-quarter">
-        <Card :title="response[(i - 1) * 3 + 1].nome" subtitle="Um local maravilhoso para você conhecer!" :description="response[(i - 1) * 3 + 1].descricao" image="https://bulma.io/images/placeholders/1280x960.png" :to="{ name: 'index'}" />
+        <Card :title="response[(i - 1) * 3 + 1].nome" subtitle="Um local maravilhoso para você conhecer!" :description="response[(i - 1) * 3 + 1].descricao" image="https://bulma.io/images/placeholders/1280x960.png" :to="{ path: '/pais/' + encodeURIComponent(response[(i - 1) * 3 + 1].nome) }" />
       </div>
       <div v-if="response[(i - 1) * 3 + 2]" class="column is-one-quarter">
-        <Card :title="response[(i - 1) * 3 + 2].nome" subtitle="Um local maravilhoso para você conhecer!" :description="response[(i - 1) * 3 + 2].descricao" image="https://bulma.io/images/placeholders/1280x960.png" :to="{ name: 'index'}" />
+        <Card :title="response[(i - 1) * 3 + 2].nome" subtitle="Um local maravilhoso para você conhecer!" :description="response[(i - 1) * 3 + 2].descricao" image="https://bulma.io/images/placeholders/1280x960.png" :to="{ path: '/pais/' + encodeURIComponent(response[(i - 1) * 3 + 2].nome) }" />
       </div>
     </div>
   </section>

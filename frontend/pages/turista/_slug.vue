@@ -6,7 +6,7 @@
         <h2 class="subtitle is-5">{{ response.nome }}</h2>
       </div>
       <div class="buttons">
-        <button class="button is-link">Adicionar turista no pedido</button>
+        <NuxtLink :to="{ path: `/turista/${encodeURIComponent($route.params.slug)}/adicionar/` }" class="button is-link">Adicionar turista no pedido</NuxtLink>
       </div>
     </div>
   </section>
@@ -23,7 +23,7 @@ export default {
     return "pages"
   },
   async created() {
-    const response = await this.$axios.get(`/api/user/${this.$route.params.slug}`)
+    const response = await this.$axios.get(`/api/user/${encodeURIComponent(this.$route.params.slug)}`)
 
     if (response.data.status === "OK") {
       this.response = response.data.response

@@ -14,7 +14,7 @@
           </b-navbar-item>
       </template>
       <template #end>
-          <b-navbar-item tag="a">
+          <b-navbar-item tag="NuxtLink" :to="{ path: '/pedido/' }">
             <b-icon icon="cart" />
             <span>
               Pedido

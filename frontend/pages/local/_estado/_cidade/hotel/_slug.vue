@@ -2,13 +2,13 @@
   <section class="section">
     <div v-for="i in Math.ceil(response.length / 3)" :key="i" class="columns is-centered is-variable is-6 is-dektop has-text-centered">
       <div v-if="response[(i - 1) * 3]" class="column is-one-quarter">
-        <Card :title="'N° ' + response[(i - 1) * 3].n" subtitleIcon="currency-usd" :subtitle="response[(i - 1) * 3].preco" :description="'Capacidade: ' + response[(i - 1) * 3].capacidade + ' / Tipo: ' + response[(i - 1) * 3].tipo" image="https://i0.wp.com/www.transamerica.com.br/blog/wp-content/uploads/2018/07/Esplanada-1.jpg?resize=870%2C576&ssl=1" :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/hotel/${encodeURIComponent($route.params.slug)}/adicionar/${encodeURIComponent(response[(i - 1) * 3].n)}` }" />
+        <Card :title="'N° ' + response[(i - 1) * 3].n" subtitleIcon="currency-usd" :subtitle="response[(i - 1) * 3].preco" :description="'Capacidade: ' + response[(i - 1) * 3].capacidade + ' / Tipo: ' + response[(i - 1) * 3].tipo" image="https://i0.wp.com/www.transamerica.com.br/blog/wp-content/uploads/2018/07/Esplanada-1.jpg?resize=870%2C576&ssl=1" @clicked="adicionar(response[(i - 1) * 3].n)" buttonOn="true" />
       </div>
       <div v-if="response[(i - 1) * 3 + 1]" class="column is-one-quarter">
-        <Card :title="'N° ' + response[(i - 1) * 3 + 1].n" subtitleIcon="currency-usd" :subtitle="response[(i - 1) * 3 + 1].preco" :description="'Capacidade: ' + response[(i - 1) * 3 + 1].capacidade + ' / Tipo: ' + response[(i - 1) * 3 + 1].tipo" image="https://i0.wp.com/www.transamerica.com.br/blog/wp-content/uploads/2018/07/Esplanada-1.jpg?resize=870%2C576&ssl=1" :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/hotel/${encodeURIComponent($route.params.slug)}/adicionar/${encodeURIComponent(response[(i - 1) * 3 + 1].n)}` }" />
+        <Card :title="'N° ' + response[(i - 1) * 3 + 1].n" subtitleIcon="currency-usd" :subtitle="response[(i - 1) * 3 + 1].preco" :description="'Capacidade: ' + response[(i - 1) * 3 + 1].capacidade + ' / Tipo: ' + response[(i - 1) * 3 + 1].tipo" image="https://i0.wp.com/www.transamerica.com.br/blog/wp-content/uploads/2018/07/Esplanada-1.jpg?resize=870%2C576&ssl=1" @clicked="adicionar(response[(i - 1) * 3 + 1].n)" buttonOn="true" />
       </div>
       <div v-if="response[(i - 1) * 3 + 2]" class="column is-one-quarter">
-        <Card :title="'N° ' + response[(i - 1) * 3 + 2].n" subtitleIcon="currency-usd" :subtitle="response[(i - 1) * 3 + 2].preco" :description="'Capacidade: ' + response[(i - 1) * 3 + 2].capacidade + ' / Tipo: ' + response[(i - 1) * 3 + 2].tipo" image="https://i0.wp.com/www.transamerica.com.br/blog/wp-content/uploads/2018/07/Esplanada-1.jpg?resize=870%2C576&ssl=1" :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/hotel/${encodeURIComponent($route.params.slug)}/adicionar/${encodeURIComponent(response[(i - 1) * 3 + 2].n)}` }" />
+        <Card :title="'N° ' + response[(i - 1) * 3 + 2].n" subtitleIcon="currency-usd" :subtitle="response[(i - 1) * 3 + 2].preco" :description="'Capacidade: ' + response[(i - 1) * 3 + 2].capacidade + ' / Tipo: ' + response[(i - 1) * 3 + 2].tipo" image="https://i0.wp.com/www.transamerica.com.br/blog/wp-content/uploads/2018/07/Esplanada-1.jpg?resize=870%2C576&ssl=1" @clicked="adicionar(response[(i - 1) * 3 + 2].n)" buttonOn="true" />
       </div>
     </div>
   </section>
@@ -30,10 +30,19 @@ export default {
     if (response.data.status === "OK") {
       this.response = response.data.response
     } else {
-      // Redirect to error page s
+       this.$buefy.toast.open(`Um erro aconteceu: ${response.data.message}`)
     }
+  },
+  methods: {
+    async adicionar(n) {
+      const response = await this.$axios.post(`/api/pedido/1/111.222.333-42/adicionar/quarto/${encodeURIComponent(n)}/${encodeURIComponent(this.$route.params.slug)}`)
 
-    // console.log(response)
+      if (response.data.status === "OK") {
+        this.$router.push("/pedido/")
+      } else {
+        this.$buefy.toast.open(`Um erro aconteceu: ${response.data.message}`)
+      }
+    }
   }
 }
 </script>

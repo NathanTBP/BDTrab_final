@@ -58,8 +58,8 @@
             </p>
           </div>
         </b-tab-item>
-        <b-tab-item label="Turistas" icon="account-group" v-for="item in response.turistas" :key="item.cpf">
-          <div class="box">
+        <b-tab-item label="Turistas" icon="account-group">
+          <div class="box"  v-for="item in response.turistas" :key="item.cpf">
             <h1 class="title is-4 is-spaced">{{ item.nome }}</h1>
           </div>
         </b-tab-item>
@@ -95,10 +95,8 @@ export default {
     if (response.data.status === "OK") {
       this.response = response.data.response
     } else {
-      // Redirect to error page s
+      this.$buefy.toast.open(`Um erro aconteceu: ${response.data.message}`)
     }
-
-    // console.log(response)
   }
 }
 </script>

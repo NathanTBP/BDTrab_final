@@ -20,7 +20,7 @@
         </p>
       </div>
       <div class="buttons is-centered">
-        <NuxtLink :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/pontogastronomico/${encodeURIComponent(this.$route.params.slug)}/adicionar/` }" class="button is-link">Adicionar ponto gastrônomico no pedido</NuxtLink>
+         <button class="button is-link" @click="adicionar">Adicionar ponto gastronômico no pedido</button>
       </div>
     </div>
   </section>
@@ -42,10 +42,19 @@ export default {
     if (response.data.status === "OK") {
       this.response = response.data.response
     } else {
-      // Redirect to error page s
+      this.$buefy.toast.open(`Um erro aconteceu: ${response.data.message}`)
     }
+  },
+  methods: {
+    async adicionar() {
+      const response = await this.$axios.post(`/api/pedido/1/111.222.333-42/adicionar/ponto/${encodeURIComponent(this.$route.params.slug)}`)
 
-    // console.log(response)
+      if (response.data.status === "OK") {
+        this.$router.push("/pedido/")
+      } else {
+        this.$buefy.toast.open(`Um erro aconteceu: ${response.data.message}`)
+      }
+    }
   }
 }
 </script>

@@ -26,6 +26,9 @@
         Ir para página
       </NuxtLink>
     </div>
+    <div class="card-footer" v-else-if="buttonOn">
+      <a class="card-footer-item" @click="clicked">Adicionar</a>
+    </div>
   </div>
 </template>
 
@@ -55,6 +58,15 @@ export default {
     to: {
       type: Object,
       required: false
+    },
+    buttonOn: {
+      type: Boolean,
+      required: false
+    }
+  },
+  methods: {
+    clicked() {
+      this.$emit("clicked");
     }
   }
 }

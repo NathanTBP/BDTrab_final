@@ -27,6 +27,7 @@ SELECT DISTINCT H.NOME, H.AVALIACAO, Q.PRECO, Q.TIPO_QUARTO, Q.CAPACIDADE
         on R.CNPJ_RES = RH.CNPJ_RES
     WHERE UPPER(H.NOME_CIDADE) = 'PARIS' and UPPER(H.TIPO) = 'HOTEL' and UPPER(R.CLASSE) = 'A';
 
+
 --Selecionar os estabelecimentos comerciais do Canadá que atendem a todas as 
 --restrições alimentares do turista de CPF 111.222.333-43
 SELECT E.NOME, E.AVALIACAO, E.TIPO
@@ -54,4 +55,55 @@ SELECT E.NOME, E.AVALIACAO, E.TIPO
                        FROM RESTRICOES_TURISTA RT
                        WHERE RT.CPF = '111.222.333-42');
 
+
+-- Seleciona todos os itens que a compõem uma viagem (turistas participantes, passagens compradas, quartos reservados e pontos gastronômicos indicados).
+SELECT 
+TUR_VI.CPF_ADICIONADO AS CPF, 
+PASS_VI.IDPASSAGEM AS PASSAGEM, 
+QUARTO_VI.CNPJ_HOTEL AS HOTEL, 
+QUARTO_VI.NUMERO_QUARTO AS QUARTO, 
+PONTO_VI.CNPJ_ADICIONADO AS PONTO_GASTRONOMICO
+FROM VIAGEM VI
+    JOIN TURISTAS_VIAGEM TUR_VI  
+    ON TUR_VI.IDVIAGEM = VI.IDVIAGEM
+        JOIN PASSAGENS_VIAGEM PASS_VI  
+        ON PASS_VI.IDVIAGEM = VI.IDVIAGEM
+            JOIN QUARTOS_VIAGEM QUARTO_VI  
+            ON QUARTO_VI.IDVIAGEM = VI.IDVIAGEM
+                JOIN PONTOS_VIAGEM PONTO_VI  
+                ON PONTO_VI.IDVIAGEM = VI.IDVIAGEM
+WHERE VI.IDVIAGEM = 1; -- Seleciona a viagem desejada.
+
+
+-- Conta quantos estabelecimentos comerciais com dado tag cada cidade tem.
+SELECT EC.NOME_CIDADE AS CIDADE, T.TAG, COUNT(*) AS QUANTIDADE
+FROM ESTABELECIMENTO_COMERCIAL EC 
+    JOIN TAGS T 
+    ON T.CNPJ = EC.CNPJ
+GROUP BY EC.NOME_CIDADE, T.TAG
+ORDER BY EC.NOME_CIDADE, T.TAG;
+
+
+-- Seleciona, para cada viagem, os pontos gastronômicos inclusos em que pelo menos um turista participante da viagem não deveria frequentar, por motivos de restrições alimentares. 
+SELECT VI.IDVIAGEM AS VIAGEM, RA.CNPJ
+FROM VIAGEM VI
+    JOIN TURISTAS_VIAGEM TUR_VI  
+    ON TUR_VI.IDVIAGEM = VI.IDVIAGEM
+        JOIN PONTOS_VIAGEM PONTO_VI  
+        ON PONTO_VI.IDVIAGEM = VI.IDVIAGEM
+            JOIN RESTRICOES_ALIMENTARES RA
+            ON RA.CNPJ = PONTO_VI.CNPJ_ADICIONADO
+                JOIN RESTRICOES_TURISTA RT
+                ON RT.CPF = TUR_VI.CPF_ADICIONADO
+WHERE TUR_VI.IDVIAGEM = PONTO_VI.IDVIAGEM
+AND RT.RESTRICAO = RA.RESTRICAO
+ORDER BY VI.IDVIAGEM;
+
+
+-- Conta quantas vezes cada pais é visitado em todas as viagens registradas.
+SELECT C.NOME_PAIS AS PAIS, COUNT(*) AS POPULARIDADE
+FROM CIDADES_VIAGEM CV
+    JOIN CIDADE C
+    ON C.NOME_CIDADE = CV.NOME_CIDADE
+GROUP BY C.NOME_PAIS;
     

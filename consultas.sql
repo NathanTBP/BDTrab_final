@@ -1,7 +1,7 @@
---Consulta nome e avaliação de pontos gastronômicos 
---de Nova York na semana do Natal, que possuam comida natalina, 
+--Consulta nome e avaliaï¿½ï¿½o de pontos gastronï¿½micos 
+--de Nova York, que possuam comida natalina, 
 --possam ter comidas vegetarianas inclusas e que estejam na mesma rua
---do hotel Transilvânia. Os dados devem estar ordenados por avaliação, da maior para menor.
+--do hotel Transilvï¿½nia. Os dados devem estar ordenados por avaliaï¿½ï¿½o, da maior para menor.
 SELECT P.NOME, P.AVALIACAO
     FROM ESTABELECIMENTO_COMERCIAL P join TAGS T
         on P.CNPJ = T.CNPJ and UPPER(P.TIPO) = 'PONTO'
@@ -9,12 +9,13 @@ SELECT P.NOME, P.AVALIACAO
         on P.CNPJ = R.CNPJ
     join ESTABELECIMENTO_COMERCIAL H
         on P.RUA = H.RUA and P.NOME_CIDADE = H.NOME_CIDADE and P.NOME_ESTADO = H.NOME_ESTADO and UPPER(H.TIPO) = 'HOTEL'
-    WHERE UPPER(T.TAG) = 'COMIDA NATALINA' and UPPER(R.RESTRICAO) = 'VEGETARIANO' and UPPER(H.NOME) = 'TRANSILVÂNIA'
+    WHERE UPPER(T.TAG) = 'COMIDA NATALINA' and UPPER(R.RESTRICAO) = 'VEGETARIANO'
+        and UPPER(H.NOME_CIDADE) = 'NOVA YORK' and UPPER(H.NOME_ESTADO) = 'NOVA YORK' and UPPER(H.NOME) = 'TRANSILVï¿½NIA'
     ORDER BY P.AVALIACAO DESC;
     
 
---Consulta nome do hotel e avaliação de todos os hoteis de Paris que possuam pelo menos um restaurante de classe A, 
---e o preço do quarto, tipo do quarto, e capacidade, se disponíveis entre os dias 12/04 e 16/04 de 2022 .
+--Consulta nome do hotel e avaliaï¿½ï¿½o de todos os hoteis de Paris que possuam pelo menos um restaurante de classe A, 
+--e o preï¿½o do quarto, tipo do quarto, e capacidade, se disponï¿½veis entre os dias 12/04 e 16/04 de 2022 .
 SELECT DISTINCT H.NOME, H.AVALIACAO, Q.PRECO, Q.TIPO_QUARTO, Q.CAPACIDADE
     FROM QUARTO Q right join ESTABELECIMENTO_COMERCIAL H
         on H.CNPJ = Q.CNPJ_HOTEL and NOT EXISTS (SELECT DQ.DATA_INDISPONIVEL
@@ -28,8 +29,8 @@ SELECT DISTINCT H.NOME, H.AVALIACAO, Q.PRECO, Q.TIPO_QUARTO, Q.CAPACIDADE
     WHERE UPPER(H.NOME_CIDADE) = 'PARIS' and UPPER(H.TIPO) = 'HOTEL' and UPPER(R.CLASSE) = 'A';
 
 
---Selecionar os estabelecimentos comerciais do Canadá que atendem a todas as 
---restrições alimentares do turista de CPF 111.222.333-43
+--Selecionar os estabelecimentos comerciais do Canadï¿½ que atendem a todas as 
+--restriï¿½ï¿½es alimentares do turista de CPF 111.222.333-43
 SELECT E.NOME, E.AVALIACAO, E.TIPO
     FROM ESTABELECIMENTO_COMERCIAL E join CIDADE C
         on C.NOME_CIDADE = E.NOME_CIDADE and C.NOME_ESTADO = E.NOME_ESTADO
@@ -42,21 +43,7 @@ SELECT E.NOME, E.AVALIACAO, E.TIPO
                             WHERE R.CNPJ = E.CNPJ) 
                      );
 
-SELECT E.NOME, E.AVALIACAO, E.TIPO
-    FROM ESTABELECIMENTO_COMERCIAL E join RESTRICOES_ALIMENTARES R
-        on R.CNPJ = E.CNPJ
-    join CIDADE C
-        on C.NOME_CIDADE = E.NOME_CIDADE and C.NOME_ESTADO = E.NOME_ESTADO
-    WHERE C.NOME_PAIS = 'CANADA' and R.RESTRICAO IN (SELECT RT.RESTRICAO
-                          FROM RESTRICOES_TURISTA RT
-                          WHERE RT.CPF = '111.222.333-43')
-    GROUP BY E.NOME, E.AVALIACAO, E.TIPO
-    HAVING count(*) = (SELECT count(*)
-                       FROM RESTRICOES_TURISTA RT
-                       WHERE RT.CPF = '111.222.333-42');
-
-
--- Seleciona todos os itens que a compõem uma viagem (turistas participantes, passagens compradas, quartos reservados e pontos gastronômicos indicados).
+-- Seleciona todos os itens que a compï¿½em uma viagem (turistas participantes, passagens compradas, quartos reservados e pontos gastronï¿½micos indicados).
 SELECT 
 TUR_VI.CPF_ADICIONADO AS CPF, 
 PASS_VI.IDPASSAGEM AS PASSAGEM, 
@@ -75,7 +62,7 @@ FROM VIAGEM VI
 WHERE VI.IDVIAGEM = 1; -- Seleciona a viagem desejada.
 
 
--- Conta quantos estabelecimentos comerciais com dado tag cada cidade tem.
+-- Conta quantos estabelecimentos comerciais com dada tag cada cidade tem.
 SELECT EC.NOME_CIDADE AS CIDADE, T.TAG, COUNT(*) AS QUANTIDADE
 FROM ESTABELECIMENTO_COMERCIAL EC 
     JOIN TAGS T 
@@ -84,7 +71,7 @@ GROUP BY EC.NOME_CIDADE, T.TAG
 ORDER BY EC.NOME_CIDADE, T.TAG;
 
 
--- Seleciona, para cada viagem, os pontos gastronômicos inclusos em que pelo menos um turista participante da viagem não deveria frequentar, por motivos de restrições alimentares. 
+-- Seleciona, para cada viagem, os pontos gastronï¿½micos inclusos em que pelo menos um turista participante da viagem nï¿½o deveria frequentar, por motivos de restriï¿½ï¿½es alimentares. 
 SELECT VI.IDVIAGEM AS VIAGEM, RA.CNPJ
 FROM VIAGEM VI
     JOIN TURISTAS_VIAGEM TUR_VI  
@@ -100,7 +87,7 @@ AND RT.RESTRICAO = RA.RESTRICAO
 ORDER BY VI.IDVIAGEM;
 
 
--- Conta quantas vezes cada pais é visitado em todas as viagens registradas.
+-- Conta quantas vezes cada pais ï¿½ visitado em todas as viagens registradas.
 SELECT C.NOME_PAIS AS PAIS, COUNT(*) AS POPULARIDADE
 FROM CIDADES_VIAGEM CV
     JOIN CIDADE C

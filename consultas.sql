@@ -71,7 +71,7 @@ GROUP BY EC.NOME_CIDADE, T.TAG
 ORDER BY EC.NOME_CIDADE, T.TAG;
 
 
--- Seleciona, para cada viagem, os pontos gastron�micos inclusos em que pelo menos um turista participante da viagem n�o deveria frequentar, por motivos de restri��es alimentares. 
+-- ANTIGO: Seleciona, para cada viagem, os pontos gastron�micos inclusos em que pelo menos um turista participante da viagem n�o deveria frequentar, por motivos de restri��es alimentares. 
 SELECT VI.IDVIAGEM AS VIAGEM, RA.CNPJ
 FROM VIAGEM VI
     JOIN TURISTAS_VIAGEM TUR_VI  
@@ -85,6 +85,32 @@ FROM VIAGEM VI
 WHERE TUR_VI.IDVIAGEM = PONTO_VI.IDVIAGEM
 AND RT.RESTRICAO = RA.RESTRICAO
 ORDER BY VI.IDVIAGEM;
+
+
+-- REVISADO: Seleciona, para cada viagem, os pontos gastron�micos inclusos em que pelo menos um turista participante da viagem n�o deveria frequentar, por motivos de restri��es alimentares.
+SELECT RA.CNPJ
+FROM TURISTAS_VIAGEM TUR_VI
+    JOIN PONTOS_VIAGEM PONTO_VI  
+    ON PONTO_VI.IDVIAGEM = TUR_VI.IDVIAGEM
+        JOIN RESTRICOES_ALIMENTARES RA
+        ON RA.CNPJ = PONTO_VI.CNPJ_ADICIONADO
+            JOIN RESTRICOES_TURISTA RT
+            ON RT.CPF = TUR_VI.CPF_ADICIONADO
+WHERE TUR_VI.IDVIAGEM = 1 -- Seleciona a viagem desejada.
+AND EXISTS (
+        (SELECT RT.RESTRICAO 
+        FROM TURISTAS_VIAGEM TUR_VI
+            JOIN RESTRICOES_TURISTA RT
+            ON RT.CPF = TUR_VI.CPF_ADICIONADO
+        WHERE TUR_VI.IDVIAGEM = 1) -- Seleciona a viagem desejada.
+    MINUS
+        (SELECT RA.RESTRICAO 
+        FROM PONTOS_VIAGEM PONTO_VI  
+            JOIN RESTRICOES_ALIMENTARES RA
+            ON RA.CNPJ = PONTO_VI.CNPJ_ADICIONADO
+        WHERE TUR_VI.IDVIAGEM = 1) -- Seleciona a viagem desejada.
+)
+GROUP BY RA.CNPJ;
 
 
 -- Conta quantas vezes cada pais � visitado em todas as viagens registradas.

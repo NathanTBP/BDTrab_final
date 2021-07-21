@@ -10,7 +10,6 @@
         </p>
       </div>
       <div class="buttons is-centered">
-        <NuxtLink :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/adicionar/` }" class="button is-link">Adicionar cidade no pedido</NuxtLink>
         <NuxtLink :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/pontogastronomico/` }" class="button is-info">Visualizar Pontos Gastronômico</NuxtLink>
         <NuxtLink :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/hotel/` }" class="button is-warning">Visualizar hoteis</NuxtLink>
         <NuxtLink :to="{ path: `/local/${$route.params.estado}/${$route.params.cidade}/transporte/` }" class="button is-success">Visualizar companhias de transporte</NuxtLink>

@@ -51,12 +51,12 @@ export default {
         },
         {
           title: 'Países',
-          icon: 'lightbulb',
+          icon: 'map-search-outline',
           to: { path: '/pais/' }
         },
         {
           title: 'Turistas',
-          icon: 'lightbulb',
+          icon: 'account-multiple',
           to: { path: '/turista/' }
         }
       ]
